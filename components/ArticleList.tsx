@@ -60,7 +60,7 @@ interface ArticleListProps {
   setCurrentPage: (page: number) => void;
   totalPages: number;
   filteredArticlesCount: number;
-  articleListRef: React.RefObject<HTMLDivElement>;
+  articleListRef: React.RefObject<HTMLDivElement | null>;
   visiblePageTokens: (number | string)[];
   feedId: string;
   loadedCount?: number;
@@ -446,7 +446,7 @@ const ArticleListComponent: React.FC<ArticleListProps> = ({
         onReset={() => handleFilterToggle('__reset__')} // Note: Logic handled in App.tsx
       />
 
-      <ScrollArea ref={articleListRef as React.RefObject<HTMLDivElement & HTMLElement>} className="flex-1 bg-[#F8FAFC] dark:bg-muted/10">
+      <ScrollArea ref={articleListRef as React.RefObject<HTMLDivElement>} className="flex-1 bg-[#F8FAFC] dark:bg-muted/10">
         <div className="flex items-start justify-center gap-4 xl:gap-6 mx-auto w-full max-w-[1920px] p-4 md:p-8">
           
           {/* Left Widgets (Sticky) - visible on 2xl */}

@@ -56,7 +56,7 @@ export const ChartPieWidget: React.FC<ChartPieWidgetProps> = React.memo(({ categ
           }}
           labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 700 }}
           itemStyle={{ color: 'hsl(var(--foreground))', fontWeight: 600 }}
-          formatter={(value: number) => [`${value}`, '数量']}
+          formatter={(value: number | undefined) => [`${value ?? 0}`, '数量']}
         />
         <Legend
           wrapperStyle={{ fontSize: 10, color: 'hsl(var(--muted-foreground))' }}

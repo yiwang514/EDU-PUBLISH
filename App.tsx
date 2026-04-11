@@ -347,8 +347,8 @@ const AppShell: React.FC<{
                 activeTagFilters={activeTagFilters}
                 handleFilterToggle={(value) => {
                   if (value === '__reset__') {
-                    updateFilter(setActiveFilters, []);
-                    setActiveTagFilters([]);
+                    updateFilter(setActiveFilters, [] as string[]);
+                    setActiveTagFilters([] as string[]);
                     return;
                   }
                   updateFilter(setActiveFilters, (prev) => (prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]));
@@ -461,7 +461,7 @@ const AppShell: React.FC<{
           selectedDate={selectedDate}
           onDateSelect={(date) => {
             setSelectedDate(date);
-            updateFilter(setActiveTagFilters, []);
+            updateFilter(setActiveTagFilters, [] as string[]);
             if (date) setIsRightSidebarOpen(true);
           }}
           articleCountByDate={articleCountByDate}
