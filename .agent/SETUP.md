@@ -482,8 +482,8 @@ pnpm run dev
 
 **告诉用户**：
 
-> 前端开发服务器已启动，请访问 http://localhost:5173 （或终端输出的实际地址）查看效果。
-> 当前展示的是项目自带的 Demo 数据。是否需要清空所有 Demo 内容，从完全空白的状态开始？
+> 前端开发服务器已启动，请访问 http://localhost:3000 （或终端输出的实际地址）查看效果。
+> 当前展示的是项目自带的 Demo 数据。是否需要清空这些 Demo 内容，切换到"站点结构还在、但列表里没有任何通知卡片"的空内容状态？
 
 ### 如果用户选择清空
 
@@ -501,43 +501,59 @@ rm -rf content/card/demo/
 rm -rf public/attachments/demo/
 ```
 
-**3. Demo 卡片封面**：
+**3. Demo 卡片封面缓存**（如果目录里只有 demo 生成物，可一并清掉；保留 `.gitkeep` 即可）：
 
 ```bash
-rm -rf content/card/covers/
-rm -rf public/covers/
+rm -f content/card/covers/*
+rm -f public/covers/*
 ```
 
-**4. Demo 订阅配置** — 清空 `config/subscriptions.yaml` 中的示例学院/部门，保留文件结构但内容置空：
+> 不要把 `config/subscriptions.yaml` 清空为 `units: []` 或空数组。当前编译脚本要求 `schools` 为非空数组，否则 `pnpm run build` 会直接失败。
 
-```yaml
-# 订阅源配置 — 请根据实际需要添加
-units: []
-```
+> 也不要在这一步删除 `public/img/` 下的 logo 或学院图标。那些是站点品牌/占位资源，不属于 Demo 卡片数据。
 
-**5. Logo 与品牌图片** — 删除项目自带的 logo，保留 `default-cover.svg`：
-
-```bash
-rm -f public/img/logo-light.svg public/img/logo-dark.svg public/img/JXNUlogo.png
-rm -f public/img/unit-icon-info-engineering.svg public/img/unit-icon-literature.svg public/img/unit-icon-student-affairs.svg
-```
-
-同时将 `config/site.yaml` 中的 logo 路径置空或改为占位值：
-
-```yaml
-logo_light: ""
-logo_dark: ""
-favicon: ""
-```
-
-**6. 重新构建并预览**：
+**4. 重新构建并预览**：
 
 ```bash
 pnpm run build
 pnpm run dev
 ```
 
-> 已清空所有 Demo 数据并重新构建。请刷新 http://localhost:5173 确认现在是空白状态。
+> 已清空 Demo 卡片、Demo 附件，并重新构建。请刷新 http://localhost:3000 确认当前效果：侧边栏和站点品牌仍然存在，但列表中不再有任何示例通知，页面会显示各组件自己的空状态文案。
+
+**如果用户希望进一步收缩到"最小可编译空内容态"**，可以把 `config/subscriptions.yaml` 改成下面这个最小合法配置：
+
+```yaml
+categories:
+  - 其它分类
+
+schools:
+  - slug: empty-campus
+    name: 空白站点
+    short_name: 空白
+    order: 1
+    icon: /img/default-unit-icon.svg
+    subscriptions:
+      - title: 待接入
+        enabled: false
+        order: 1
+        icon: /img/default-unit-icon.svg
+```
+
+说明：
+
+- `schools` 不能为空；当前编译器要求它必须是非空数组。
+- 每个 school 的 `subscriptions` 也不能为空；至少保留 1 条占位订阅。
+- 这条占位订阅设为 `enabled: false` 后，不会作为正常订阅源出现在侧边栏。
+- 编译器仍会自动补一条 `未知来源` 订阅，但在 0 篇内容时会被前端隐藏。
+
+这个状态下，最终页面效果是：
+
+- 站点框架、Logo、主题切换等基础壳子仍然存在。
+- 左侧通常只剩 1 个学院汇总入口（如 `空白站点汇总`）。
+- 列表区域没有任何通知卡片，会显示"当前源暂无可展示的内容"之类的空态文案。
+- 搜索索引为空，RSS 频道仍会生成，但没有任何 item。
+- 这是"最小可编译空内容态"，不是完全白屏或完全无结构页面。
 
 ### 如果用户选择保留
 

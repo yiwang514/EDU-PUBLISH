@@ -40,6 +40,7 @@ archive/*
 skills/
 CLAUDE.md
 AGENT.md
+AGENTS.md
 
 # ─── Platform deploy cache ───
 .vercel/
